@@ -386,6 +386,7 @@ namespace Radegast
             client.Groups.GroupDropped += Groups_GroupDropped;
             client.Groups.GroupJoinedReply += Groups_GroupsChanged;
             client.Network.LoginProgress += Network_LoginProgress;
+            SeedCapsRetryGuard.Register(client);
             if (NetCom != null)
             {
                 NetCom.ClientConnected += NetCom_ClientConnected;
@@ -400,6 +401,7 @@ namespace Radegast
             client.Groups.GroupDropped -= Groups_GroupDropped;
             client.Groups.GroupJoinedReply -= Groups_GroupsChanged;
             client.Network.LoginProgress -= Network_LoginProgress;
+            SeedCapsRetryGuard.Unregister(client);
             if (NetCom != null)
             {
                 NetCom.ClientConnected -= NetCom_ClientConnected;
