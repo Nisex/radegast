@@ -174,7 +174,10 @@ public sealed class NetComAvalonia : INetCom
         // LibreMetaverse's Shutdown leaves the dead CurrentSim in place, and Simulator equality
         // is by endpoint, so logging back in to the same region makes SetCurrentSim think nothing
         // changed: the dead sim (Caps == null) stays current and the new one never gets its seed caps.
-        if (!Client.Network.Connected) Client.Network.CurrentSim = null;
+        if (!Client.Network.Connected)
+        {
+            Client.Network.CurrentSim = null;
+        }
 
         Client.Network.BeginLogin(loginParams);
     }

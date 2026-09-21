@@ -50,15 +50,24 @@ namespace Radegast
         public static void Unregister(GridClient client) => Clients.TryRemove(client, out _);
 
         public ILogger CreateLogger(string categoryName) => this;
-        public void Dispose() { }
+        public void Dispose()
+        {
+            // Nothing to release: the provider holds no resources, only static state shared across clients.
+        }
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
         public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel.Debug;
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
             Func<TState, Exception?, string> formatter)
         {
-            if (HttpCtsField == null || exception is not ObjectDisposedException) return;
-            if (formatter(state, exception) != "Error cancelling CancellationTokenSource") return;
+            if (HttpCtsField == null || exception is not ObjectDisposedException)
+            {
+                return;
+            }
+            if (formatter(state, exception) != "Error cancelling CancellationTokenSource")
+            {
+                return;
+            }
 
             foreach (var client in Clients.Keys)
             {
@@ -81,8 +90,14 @@ namespace Radegast
             foreach (var sim in sims)
             {
                 var caps = sim.Caps;
-                if (caps == null || !sim.Connected) continue;
-                if (HttpCtsField!.GetValue(caps) is not CancellationTokenSource cts || !IsDisposed(cts)) continue;
+                if (caps == null || !sim.Connected)
+                {
+                    continue;
+                }
+                if (HttpCtsField!.GetValue(caps) is not CancellationTokenSource cts || !IsDisposed(cts))
+                {
+                    continue;
+                }
 
                 HttpCtsField.SetValue(caps, new CancellationTokenSource());
             }

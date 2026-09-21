@@ -322,7 +322,10 @@ namespace Radegast
             loginParams.Token = LoginOptions.MfaToken!;
 
             // Clear the dead CurrentSim LibreMetaverse's Shutdown leaves behind; see NetComAvalonia.Login.
-            if (!Client.Network.Connected) Client.Network.CurrentSim = null;
+            if (!Client.Network.Connected)
+            {
+                Client.Network.CurrentSim = null;
+            }
 
             Client.Network.BeginLogin(loginParams);
         }
